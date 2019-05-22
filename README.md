@@ -1,6 +1,6 @@
 # 2019_22_05_space_Invaders_Tut
 
-First JS game code.
+JS game code.
 
 Space Invaders with HTML Canvas and Javascript, with tutorial help:
 
