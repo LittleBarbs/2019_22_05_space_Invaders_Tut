@@ -1,0 +1,46 @@
+body {
+    text-align: center;
+    font-family: cursive, sans-serif;
+}
+
+canvas {
+    background-image: url(../img/bg.jpg);
+    background-size: cover;
+    display: block;
+    position: absolute;
+    margin: 200px auto 0 auto;
+    top: 0;
+    left: 0;
+    bottom:0;
+    right:0;
+    box-shadow: 4px 4px 4px silver;
+}
+
+p {
+    font-size: 5em;
+    color: #f56;
+    text-transform: uppercase;
+    padding-top: 1em;
+    position: relative;
+    z-index: 100;
+   
+}
+
+#btn {
+    visibility: hidden;
+    background-color: #eee;
+    border: 2px solid grey;
+    border-radius: 50%;
+    font-family: cursive, sans-serif;
+    font-size: 4em;
+    padding: 1.2em;
+    position: relative;
+    z-index: 100;
+    color: #222;
+}
+
+#btn:hover {
+    background-color: #222;
+    color: #eee;
+    transition: 2s;
+}

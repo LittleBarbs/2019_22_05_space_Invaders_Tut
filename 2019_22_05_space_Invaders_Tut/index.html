@@ -1,0 +1,171 @@
+<!doctype <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Space Invaders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/stylesheet.css" />
+    <script src="js/main.js"></script>
+    <script src="js/functions.js"></script>
+</head>
+<body>
+
+    <h1 id="h-text">SPACE INVADERS </h1>
+    <h2 id="name">PLAYER: </h2>
+    <h2 id="score">Score: 0</h2>
+    <p id="text"></p>
+    <button id="btn" type="button" onclick="document.location.reload();">Start again?</button>
+   
+
+    <script>
+        
+       // declaring variables
+        var display, handler, frames, spFrame, lvFrame; 
+        var enemySp, mySp, ciSp; 
+        var enemies, dir, myShip, bullets, eBullets; 
+        var player, score, scoreCount, scoreConst, gameOver, text, winText, btn, scoreText;
+
+        // text and input
+
+        scoreText = "Score: ";
+        gameOver = "GAME OVER!";
+        player = prompt("Enter your name and play: ");
+        text = document.getElementById("text");
+        score = document.getElementById("score");
+        btn = document.getElementById("btn");
+        document.getElementById("name").innerHTML = "PLAYER: " + player;
+        winText = player + "<br /> is the winner!!!";
+        scoreCount = 0;
+        scoreConst= 20;
+               
+        // main function
+        function main() { 
+
+            // create canvas
+            display = new Display(800,700); 
+            handler = new Handler(); 
+
+            //create sprites
+            var img  = new Image();  
+            img.addEventListener("load", function() { 
+                
+                enemySp = [
+                    [new Sprite(this, 0, 0, 22, 16), new Sprite(this, 0, 16, 22, 16)],
+                    [new Sprite(this, 22, 0, 16, 16), new Sprite(this, 22, 16, 16, 16)],
+                    [new Sprite(this, 38, 0, 24, 16), new Sprite(this, 38, 16, 24, 16)]
+                ];
+                mySp = new Sprite(this, 62, 0, 22, 16);
+                ciSp = new Sprite(this, 84, 8, 36, 24); 
+
+                // initiate and run the game 
+                init();
+                run();
+            });
+
+            img.src = "img/invaders.png";
+        };
+
+        // initiate game objects 
+        function init() {
+
+            // start settings 
+            frames = 0;
+            spFrame = 0;
+            lvFrame = 20;
+            dir = 1;
+
+            // create ship object
+            myShip = {
+                sprite: mySp,
+                x: (display.width - mySp.w) / 2,
+                y: display.height - (30 + mySp.h),
+                w: 22,
+                h: 16
+            }
+
+            // initiate bullet arrays
+            bullets = [];
+            eBullets = [];
+            
+            //initiate enemies array
+            enemies = [];
+
+            // create enemies function
+            createEnemies();
+        };
+
+        // Wrapper around the game loop function, updates and renders the game
+        function run() {
+            var loop = function() {
+                update();
+                render();
+
+                window.requestAnimationFrame(loop, display.canvas);
+            };
+
+            window.requestAnimationFrame(loop, display.canvas);
+        };
+
+        // update the game logic
+        function update() {
+
+            // update frame count
+            frames++;
+
+            // update ship position regarding the pressed key
+            if(handler.isDown(37)) { // Arrow LEFT
+                myShip.x -= 5;
+            }
+
+            if(handler.isDown(39)) { // Arrow RIGHT
+                myShip.x += 5;
+            }
+
+            // keep ship inside canvas
+            myShip.x = Math.max(Math.min(myShip.x, display.width - (30 + mySp.w)), 30);
+            
+            // append bullet each time space is pressed 
+            if(handler.isPressed(32)) { // SPACE
+                bullets.push(new Bullets(myShip.x + 10, myShip.y, -8, 10, 10, "#0f0"));
+            }
+
+            enemyHit();  // check if enemies were hit and delete them
+            enemyBullets(); // make enemies shoot on random
+            shipHit(); //check if ship was hit
+            enemyDir();  // enemy moving direction
+        };
+
+        // Render the game state to the canvas
+        function render(){
+
+            // clear game canvas
+            display.clear();
+
+            // draw enemies
+            for (var i= 0, len = enemies.length; i < len; i++) {
+                var a = enemies[i];
+                display.drawSprite(a.sprite[spFrame], a.x, a.y);
+            }
+
+            // save context and draw bullet then restore
+            display.ctx.save();
+            for(var i = 0, len = bullets.length; i < len; i++) {
+                display.drawBullets(bullets[i]);
+            }
+
+            for(var i = 0, len = eBullets.length; i < len; i++) {
+                display.drawBullets(eBullets[i]);
+            }
+            display.ctx.restore();
+            
+            // display.ctx.drawImage(cities.canvas, 30, cities.y);
+            // draw the ship sprite
+            display.drawSprite(myShip.sprite, myShip.x, myShip.y);
+        };
+
+        // start and run the game
+        main();
+    </script>
+</body>
+</html>
