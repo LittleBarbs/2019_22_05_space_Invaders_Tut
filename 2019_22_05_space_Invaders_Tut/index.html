@@ -31,6 +31,9 @@
         scoreText = "Score: ";
         gameOver = "GAME OVER!";
         player = prompt("Enter your name and play: ");
+        if (player == "") {
+            player = "Incognito";
+        }
         text = document.getElementById("text");
         score = document.getElementById("score");
         btn = document.getElementById("btn");
